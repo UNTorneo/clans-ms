@@ -1,76 +1,63 @@
-const { request, response } = require('express');
+import { Sequelize } from 'sequelize';
+import clan_models from './models/clan_models.js';
 
-const Pool = require('pg').Pool;
+const sequelize = new Sequelize('postgres://user:pass@example.com:5432/api')
 
-const pool = new Pool({
-  user: 'admin',
-  host: 'localhost',
-  database: 'api',
-  password: 'bedoya2501',
-  port: 5432,
-});
-
-const getClans = (request, response) => {
-    pool.query('SELECT * FROM clans ORDER BY id ASC', (error, results) => {
-        if (error) {
-            throw error;
-        }
-        response.status(200).json(results.rows);
-    });
+try {
+  sequelize.authenticate();
+  console.log('Connection has been established successfully.');
+} catch (error) {
+  console.error('Unable to connect to the database:', error);
 }
 
-const getClanById = (request, response) => {
-    const id = parseInt(request.params.id);
-
-    pool.query('SELECT * FROM clans WHERE id = $1', [id], (error, results) =>{
-        if (eror) {
-            throw error;
-        }
-        response.status(200).json(results.rows);
-    })
+const getClans = async () => {
+  const clans = await clan_models.Clan.findAll();
+  console.log(clans.every(clan => clan instanceof clan_models.Clan));
 }
 
-const createClan = (request, response) => {
-  const name = request.body;
-  const date = new Date;
-  const created_at = date.setFullYear.toString + date.getMonth.toString + date.getDay.toString;
-
-  pool.query('INSERT INTO clans (name, created_at) VALUES ($1, $2) RETURNING *', [name, created_at], (error, results) => {
-    if (error) {
-      throw error;
+const getClanById = async (request, response) => {
+  const id = parseInt(request.params.id);
+  const clans = await clan_models.Clan.findAll({
+    where: {
+      id: id
     }
-    response.status(201).send(`User added with ID: ${results.rows[0].id}`)
+  });
+  console.log(clans.every(clan => caln instanceof clan_models.Clan));
+}
+
+const createClan = async (request, response) => {
+  const { leader_id, name, created_at } = request.body;
+
+  await clan_models.Clan.create({
+    'leader_id':leader_id,
+    'name':name,
+    'created_at':created_at
   });
 }
 
-const updateClan = (request, response) => {
+const updateClan = async (request, response) => {
   const id = parseInt(request.params.id);
-  const name = request.body;
+  const { leader_id, name, created_at } = request.body;
 
-  pool.query(
-    'UPDATE clans SET name = $1 WHERE id = $3',
-    [name, id],
-    (error, results) => {
-      if (error) {
-        throw error;
-      }
-      response.status(200).send(`User modified with ID: ${id}`);
+  await clan_models.Clan.update({
+    'leader_id' : leader_id,
+    'name' : name,
+    'created_at' : created_at
+  }, {
+    where: {
+      'id' : id
     }
-  );
+  });
 }
 
-const deleteClan = (request, response) => {
-    const id = parseInt(request.params.id);
-
-    pool.query('DELETE FROM clans WHERE id = $1', [id], (error, results) => {
-        if (error) {
-            throw error;
-        }
-        response.status(200).send(`Clan deleted with id = ${id}`);
-    });
+const deleteClan = async (request, response) => {
+  const id = parseInt(request.params.id);
+  await clan_models.Clan.destroy({
+    where: {'id' : id}
+  });
 }
 
-module.exports = {
+export default {
     getClanById,
     getClans,
     createClan,
