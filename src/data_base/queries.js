@@ -12,9 +12,6 @@ const initialize = async () => {
 
 const getClanById = async (request, response) => {
   const id = parseInt(request.params.id);
-  //console.log('*****************************************************************');
-  //console.log(`${request.params.id}`);
-  //console.log('*****************************************************************');
   const clans = await Clan.findAll(
     {where: {
       id: id
@@ -28,9 +25,6 @@ const getClanById = async (request, response) => {
 }
 
 const getClans = async (request, response) => {
-  console.log('*****************************************************************');
-  console.log("creo queentra acá");
-  console.log('*****************************************************************');
   try {
     const clans = await Clan.findAll();
     response.json(clans);
@@ -44,7 +38,6 @@ const getClans = async (request, response) => {
 
 const createClan = async (request, response) => {
   const { leader_id, name, created_at } = request.body;
-  console.log(request.body);
   try {
     await Clan.create({
       'leader_id':leader_id,
@@ -59,13 +52,14 @@ const createClan = async (request, response) => {
 
 const updateClan = async (request, response) => {
   const id = parseInt(request.params.id);
-  const { leader_id, name, created_at } = request.body;
+  const leader_id = request.body['leader_id'];
+  const name = request.body['name'];
+  const values = {};
+  if (name) {values['name'] = name};
+  if (leader_id) {values['leader_id'] = leader_id};
   try {
-    await Clan.update({
-      'leader_id' : leader_id,
-      'name' : name,
-      'created_at' : created_at
-    }, {
+    await Clan.update(values,
+    {
       where: {
         'id' : id
       }
