@@ -1,66 +1,97 @@
-import { Sequelize } from 'sequelize';
-import clan_models from './models/clan_models.js';
+const { Sequelize } = require('sequelize');
+const { Clan } = require('./models/clan_models');
 
-const sequelize = new Sequelize('postgres://user:pass@example.com:5432/api')
-
-try {
-  sequelize.authenticate();
-  console.log('Connection has been established successfully.');
-} catch (error) {
-  console.error('Unable to connect to the database:', error);
-}
-
-const getClans = async () => {
-  const clans = await clan_models.Clan.findAll();
-  console.log(clans.every(clan => clan instanceof clan_models.Clan));
+const initialize = async () => {
+  try {
+    await Sequelize.authenticate();
+    console.log('Connection has been established successfully.');
+  } catch (error) {
+    console.error('Unable to connect to the database:', error);
+  }
 }
 
 const getClanById = async (request, response) => {
   const id = parseInt(request.params.id);
-  const clans = await clan_models.Clan.findAll({
-    where: {
+  //console.log('*****************************************************************');
+  //console.log(`${request.params.id}`);
+  //console.log('*****************************************************************');
+  const clans = await Clan.findAll(
+    {where: {
       id: id
-    }
-  });
-  console.log(clans.every(clan => caln instanceof clan_models.Clan));
+    },}
+  );
+  if (clans == null) {
+    response.send('Not found');
+  }
+  response.json(clans);
+  console.log(clans.every(clan => clan instanceof Clan));
 }
+
+const getClans = async (request, response) => {
+  console.log('*****************************************************************');
+  console.log("creo queentra acá");
+  console.log('*****************************************************************');
+  try {
+    const clans = await Clan.findAll();
+    response.json(clans);
+    console.log(clans.every(clan => clan instanceof Clan));
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+
 
 const createClan = async (request, response) => {
   const { leader_id, name, created_at } = request.body;
-
-  await clan_models.Clan.create({
-    'leader_id':leader_id,
-    'name':name,
-    'created_at':created_at
-  });
+  try {
+    await Clan.create({
+      'leader_id':leader_id,
+      'name':name,
+      'created_at':created_at
+    });
+    response.send(`Clan created with name ${name}`);
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 const updateClan = async (request, response) => {
   const id = parseInt(request.params.id);
   const { leader_id, name, created_at } = request.body;
-
-  await clan_models.Clan.update({
-    'leader_id' : leader_id,
-    'name' : name,
-    'created_at' : created_at
-  }, {
-    where: {
-      'id' : id
+  try {
+    await Clan.update({
+      'leader_id' : leader_id,
+      'name' : name,
+      'created_at' : created_at
+    }, {
+      where: {
+        'id' : id
+      }
+    });
+    response.send(`Clan updated with id ${id}`);
+    } catch (error) {
+      console.log(error);
     }
-  });
 }
 
 const deleteClan = async (request, response) => {
   const id = parseInt(request.params.id);
-  await clan_models.Clan.destroy({
-    where: {'id' : id}
-  });
+  try {  
+    await Clan.destroy({
+      where: {'id' : id}
+    });
+    response.send(`Clan deleted with id ${id}`);
+  } catch (error) {
+    console.log(error);
+  }
 }
 
-export default {
-    getClanById,
-    getClans,
-    createClan,
-    updateClan,
-    deleteClan
+module.exports = {
+  initialize,
+  getClanById,
+  getClans,
+  createClan,
+  updateClan,
+  deleteClan
 };

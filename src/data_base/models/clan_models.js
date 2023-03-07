@@ -1,6 +1,9 @@
-import { Sequelize, Model, DataTypes } from 'sequelize';
+const { Sequelize, Model, DataTypes } = require('sequelize');
 
-const sequelize = new Sequelize('sqlite::memory:');
+const sequelize = new Sequelize('api', 'admin', 'bedoya2501', {
+  host: 'localhost',
+  dialect: 'postgres',
+});
 
 class Clan extends Model {
   id;
@@ -14,10 +17,12 @@ Clan.init({
     type: DataTypes.INTEGER,
     autoIncrement: true,
     primaryKey: true,
+    allowNullable: false,
+    allowNull: false,
   },
   leader_id: {
     type: DataTypes.CHAR(65),
-    allowNullable: false,
+    allowNull: false,
   },
   name: {
     type: DataTypes.CHAR(45),
@@ -26,12 +31,18 @@ Clan.init({
   created_at: {
     type: DataTypes.DATE,
     allowNull: false,
+    field: 'created_at'
   }
 }, {
+  timestamps: false,
+  paranoid: true,
+  underscored: true,
+  freezeTableName: true,
+  tableName: 'clans',
   sequelize,
-  modelName: 'Clan'
+  modelName: 'clan'
 });
 
-export default {
+module.exports = {
   Clan,
-};
+}
