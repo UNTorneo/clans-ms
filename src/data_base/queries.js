@@ -44,6 +44,7 @@ const getClans = async (request, response) => {
 
 const createClan = async (request, response) => {
   const { leader_id, name, created_at } = request.body;
+  console.log(request.body);
   try {
     await Clan.create({
       'leader_id':leader_id,
