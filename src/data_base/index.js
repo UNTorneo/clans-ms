@@ -11,6 +11,8 @@ app.use(
   })
 );
 
+app.get('/clans/users/:id', db.getUsersByClanId)
+app.post('/clans/users/:id', db.addUserToClan)
 app.put('/clans/:id', db.updateClan)
 app.delete('/clans/:id', db.deleteClan)
 app.get('/clans/:id', db.getClanById)

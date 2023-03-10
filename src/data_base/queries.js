@@ -1,5 +1,7 @@
+const { request, response } = require('express');
 const { Sequelize } = require('sequelize');
 const { Clan } = require('./models/clan_models');
+const { UsersClan } = require('./models/users_clan_model');
 
 const initialize = async () => {
   try {
@@ -82,11 +84,47 @@ const deleteClan = async (request, response) => {
   }
 }
 
+const getUsersByClanId = async (request, response) => {
+  const clanId = parseInt(request.params.id);
+  try {
+    const users = await UsersClan.findAll({
+      where: {clan_id : clanId}
+    });
+    if (users == null) {
+    response.send('Not found');
+  }
+    response.json(users);
+    console.log(users.every(user => user instanceof UsersClan));
+  } catch (error) {
+    response.send(error);
+  }
+}
+
+const addUserToClan = async (request, response) => {
+  const clanId = parseInt(request.params.id);
+  const userId = request.body['user_id'];
+  console.log(userId);
+  const isClanIdCorrect = Clan.findAll({where: {id : clanId}}) != null;
+  if (isClanIdCorrect) {
+    try {
+      await UsersClan.create({
+        'clan_id' : clanId,
+        'user_id' : userId
+      });
+      response.send(`User with id ${userId} added to clan ${clanId}.`);
+    } catch (error) {
+      response.send(error);
+    }
+  }
+}
+
 module.exports = {
   initialize,
   getClanById,
   getClans,
   createClan,
   updateClan,
-  deleteClan
+  deleteClan,
+  getUsersByClanId,
+  addUserToClan
 };
