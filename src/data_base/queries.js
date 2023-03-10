@@ -109,7 +109,7 @@ const addUserToClan = async (request, response) => {
         'clan_id' : clanId,
         'user_id' : userId
       });
-      response.send(`User with id ${userId} added to clan ${clanId}.`);
+      response.send(`User with id ${userId} added to clan with id ${clanId}.`);
     } catch (error) {
       response.send(error);
     }
