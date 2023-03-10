@@ -36,8 +36,6 @@ const getClans = async (request, response) => {
   }
 }
 
-
-
 const createClan = async (request, response) => {
   const { leader_id, name, created_at } = request.body;
   try {
