@@ -3,15 +3,6 @@ const { Sequelize } = require('sequelize');
 const { Clan } = require('./models/clan_models');
 const { UsersClan } = require('./models/users_clan_model');
 
-const initialize = async () => {
-  try {
-    await Sequelize.authenticate();
-    console.log('Connection has been established successfully.');
-  } catch (error) {
-    console.error('Unable to connect to the database:', error);
-  }
-}
-
 const getClanById = async (request, response) => {
   const id = parseInt(request.params.id);
   const clans = await Clan.findAll(
@@ -117,7 +108,6 @@ const addUserToClan = async (request, response) => {
 }
 
 module.exports = {
-  initialize,
   getClanById,
   getClans,
   createClan,

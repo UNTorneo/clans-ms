@@ -1,18 +1,9 @@
 const { Sequelize, Model, DataTypes } = require('sequelize');
 const { Clan } = require('./clan_models');
 
-const sequelize = new Sequelize('api', 'admin', 'bedoya2501', {
-  host: 'localhost',
-  dialect: 'postgres',
-});
+const {sequelize} = require('../db');  
 
-class UsersClan extends Model {
-  id;
-  clan_id;
-  user_id;
-}
-
-UsersClan.init({
+const UsersClan = sequelize.define('users_clan',{
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -23,6 +14,7 @@ UsersClan.init({
     clan_id: {
         type: DataTypes.INTEGER,
         field: 'clan_id',
+        unique: true,
         allowNullable: false,
         allowNull: false,
     },
@@ -32,20 +24,22 @@ UsersClan.init({
         allowNull: false,
     }
 }, {
+  sequelize,
   timestamps: false,
   paranoid: true,
   underscored: true,
   freezeTableName: true,
   tableName: 'users_clan',
-  sequelize,
   modelName: 'users_clan'
 });
 
-Clan.hasMany(UsersClan, {
-    foreignKey: UsersClan.clan_id,
-});
+Clan.hasMany(UsersClan);
 
 UsersClan.belongsTo(Clan);
+
+(async () => {
+  await UsersClan.sync({  });
+})();
 
 module.exports = {
     UsersClan,

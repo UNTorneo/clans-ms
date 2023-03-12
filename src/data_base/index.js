@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const db = require('./queries')
+
 const app = express();
 const port = 3000;
 
@@ -11,6 +12,8 @@ app.use(
   })
 );
 
+
+// cambiar arquitectura
 app.get('/clans/users/:id', db.getUsersByClanId)
 app.post('/clans/users/:id', db.addUserToClan)
 app.put('/clans/:id', db.updateClan)

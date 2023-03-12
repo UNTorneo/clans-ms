@@ -4,7 +4,8 @@
   "description": "Clans microservice for Software Architecture assignature",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack-cli"
   },
   "repository": {
     "type": "git",
@@ -31,5 +32,8 @@
     "sequelize": "^6.29.0",
     "sequelize-cli": "^6.6.0",
     "sqlite3": "^5.1.4"
+  },
+  "optionalDependencies": {
+    "fsevents": "^2.3.2"
   }
 }

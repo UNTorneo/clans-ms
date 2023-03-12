@@ -1,18 +1,8 @@
-const { Sequelize, Model, DataTypes } = require('sequelize');
+const {  Model, DataTypes } = require('sequelize');
 
-const sequelize = new Sequelize('api', 'admin', 'bedoya2501', {
-  host: 'localhost',
-  dialect: 'postgres',
-});
+const {sequelize} = require('../db');
 
-class Clan extends Model {
-  id;
-  leader_id;
-  name;
-  created_at;
-}
-
-Clan.init({
+const Clan= sequelize.define('clans',{
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -34,14 +24,18 @@ Clan.init({
     field: 'created_at'
   }
 }, {
+  sequelize,
   timestamps: false,
   paranoid: true,
   underscored: true,
   freezeTableName: true,
   tableName: 'clans',
-  sequelize,
-  modelName: 'clan'
+  modelName: 'clans'
 });
+
+(async () => {
+  await Clan.sync({  });
+})();
 
 module.exports = {
   Clan,
