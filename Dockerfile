@@ -6,4 +6,4 @@ RUN npm install
 # Copy the source files into the image
 COPY . .
 EXPOSE 3000
-CMD node ./src/data_base/index.js
+CMD node ./src/main/javascript/com.jubedoyat/features/clans/router/index.js

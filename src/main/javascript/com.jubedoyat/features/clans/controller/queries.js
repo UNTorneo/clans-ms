@@ -95,10 +95,10 @@ const deleteClan = async (request, response) => {
 }
 
 const getUsersByClanId = async (request, response) => {
-  const clanId = parseInt(request.params.id);
+  const clan_id = parseInt(request.params.id);
   try {
     const users = await UsersClan.findAll({
-      where: {clan_id : clanId}
+      where: {'clan_id' : clan_id}
     });
     if (users == null) {
     response.json({

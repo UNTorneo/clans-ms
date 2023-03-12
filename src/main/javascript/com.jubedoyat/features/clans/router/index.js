@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const db = require('../../../../../../data_base/queries')
+const db = require('../controller/queries');
 
 const app = express();
 const port = 3000;
