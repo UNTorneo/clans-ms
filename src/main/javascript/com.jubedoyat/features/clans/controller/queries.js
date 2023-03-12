@@ -1,7 +1,7 @@
 const { request, response } = require('express');
 const { Sequelize } = require('sequelize');
-const { Clan } = require('./models/clan_models');
-const { UsersClan } = require('./models/users_clan_model');
+const { Clan } = require('../models/clan_models');
+const { UsersClan } = require('../models/users_clan_model');
 
 const getClanById = async (request, response) => {
   const id = parseInt(request.params.id);
@@ -11,7 +11,9 @@ const getClanById = async (request, response) => {
     },}
   );
   if (clans == null) {
-    response.send('Not found');
+    response.json({
+      'msg' : 'Not found'
+    });
   }
   response.json(clans);
   console.log(clans.every(clan => clan instanceof Clan));
@@ -23,7 +25,9 @@ const getClans = async (request, response) => {
     response.json(clans);
     console.log(clans.every(clan => clan instanceof Clan));
   } catch (error) {
-    console.log(error);
+    response.json({
+      'msg' : error
+    });
   }
 }
 
@@ -35,9 +39,18 @@ const createClan = async (request, response) => {
       'name':name,
       'created_at':created_at
     });
-    response.send(`Clan created with name ${name}`);
+    response.json({
+      'msg' : `Clan created`,
+      'Clan data' : {
+        'leader_id':leader_id,
+        'name':name,
+        'created_at':created_at
+      }
+    });
   } catch (error) {
-    console.log(error);
+    response.json({
+      'msg' : error
+    });
   }
 }
 
@@ -55,9 +68,13 @@ const updateClan = async (request, response) => {
         'id' : id
       }
     });
-    response.send(`Clan updated with id ${id}`);
+    response.json({
+      'msg' : `Clan with id ${id} updated.`
+    });
     } catch (error) {
-      console.log(error);
+      response.json({
+        'msg' : error
+      });
     }
 }
 
@@ -67,9 +84,13 @@ const deleteClan = async (request, response) => {
     await Clan.destroy({
       where: {'id' : id}
     });
-    response.send(`Clan deleted with id ${id}`);
+    response.json({
+      'msg' : `Clan with id ${id} deleted.`
+    });
   } catch (error) {
-    console.log(error);
+    response.json({
+      'msg' : error
+    });
   }
 }
 
@@ -80,12 +101,16 @@ const getUsersByClanId = async (request, response) => {
       where: {clan_id : clanId}
     });
     if (users == null) {
-    response.send('Not found');
+    response.json({
+      'msg' : 'Not found'
+    });
   }
     response.json(users);
     console.log(users.every(user => user instanceof UsersClan));
   } catch (error) {
-    response.send(error);
+    response.json({
+        'msg' : error
+      });
   }
 }
 
@@ -100,9 +125,13 @@ const addUserToClan = async (request, response) => {
         'clan_id' : clanId,
         'user_id' : userId
       });
-      response.send(`User with id ${userId} added to clan with id ${clanId}.`);
+      response.json({
+        'msg' : `User with id ${userId} added to clan with id ${clanId}`
+      });
     } catch (error) {
-      response.send(error);
+      response.json({
+        'msg' : error
+      });
     }
   }
 }

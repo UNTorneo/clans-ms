@@ -1,6 +1,6 @@
 const {  Model, DataTypes } = require('sequelize');
 
-const {sequelize} = require('../db');
+const {sequelize} = require('../controller/db');
 
 const Clan= sequelize.define('clans',{
   id: {
