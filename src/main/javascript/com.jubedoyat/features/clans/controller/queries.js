@@ -101,10 +101,11 @@ const getUsersByClanId = async (request, response) => {
       where: {'clan_id' : clan_id}
     });
     if (users == null) {
-    response.json({
-      'msg' : 'Not found'
-    });
-  }
+      response.json({
+        'msg' : 'Not found'
+      });
+    }
+    users.forEach((user) => delete user.dataValues.clanId);
     response.json(users);
     console.log(users.every(user => user instanceof UsersClan));
   } catch (error) {

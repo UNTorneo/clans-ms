@@ -34,7 +34,7 @@ const UsersClan = sequelize.define('users_clan',{
 });
 
 Clan.hasMany(UsersClan, {
-    foreignKey: 'clan_id INTO clanId'
+    foreignKey: 'clan_id'
 });
 
 UsersClan.belongsTo(Clan);
