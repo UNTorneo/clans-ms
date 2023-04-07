@@ -15,8 +15,8 @@ const getClanById = async (request, response) => {
       'msg' : 'Not found'
     });
   }
-  response.json(clans);
-  console.log(clans.every(clan => clan instanceof Clan));
+  response.json(clans[0]);
+  console.log(clans);
 }
 
 const getClans = async (request, response) => {
@@ -32,19 +32,19 @@ const getClans = async (request, response) => {
 }
 
 const createClan = async (request, response) => {
-  const { leader_id, name, created_at } = request.body;
+  const { leaderId, name, createdAt } = request.body;
   try {
     await Clan.create({
-      'leader_id':leader_id,
+      'leaderId':leaderId,
       'name':name,
-      'created_at':created_at
+      'createdAt':createdAt
     });
     response.json({
       'msg' : `Clan created`,
       'Clan data' : {
-        'leader_id':leader_id,
+        'leaderId':leaderId,
         'name':name,
-        'created_at':created_at
+        'createdAt':createdAt
       }
     });
   } catch (error) {
@@ -56,11 +56,11 @@ const createClan = async (request, response) => {
 
 const updateClan = async (request, response) => {
   const id = parseInt(request.params.id);
-  const leader_id = request.body['leader_id'];
+  const leaderId = request.body['leaderId'];
   const name = request.body['name'];
   const values = {};
   if (name) {values['name'] = name};
-  if (leader_id) {values['leader_id'] = leader_id};
+  if (leaderId) {values['leaderId'] = leaderId};
   try {
     await Clan.update(values,
     {
@@ -95,10 +95,10 @@ const deleteClan = async (request, response) => {
 }
 
 const getUsersByClanId = async (request, response) => {
-  const clan_id = parseInt(request.params.id);
+  const clanIdToFind = parseInt(request.params.id);
   try {
     const users = await UsersClan.findAll({
-      where: {'clan_id' : clan_id}
+      where: {'clanId' : clanIdToFind}
     });
     if (users == null) {
       response.json({
@@ -117,14 +117,14 @@ const getUsersByClanId = async (request, response) => {
 
 const addUserToClan = async (request, response) => {
   const clanId = parseInt(request.params.id);
-  const userId = request.body['user_id'];
+  const userId = request.body['userId'];
   console.log(userId);
   const isClanIdCorrect = Clan.findAll({where: {id : clanId}}) != null;
   if (isClanIdCorrect) {
     try {
       await UsersClan.create({
-        'clan_id' : clanId,
-        'user_id' : userId
+        'clanId' : clanId,
+        'userId' : userId
       });
       response.json({
         'msg' : `User with id ${userId} added to clan with id ${clanId}`

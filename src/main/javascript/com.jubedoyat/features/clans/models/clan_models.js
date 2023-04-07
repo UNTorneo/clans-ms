@@ -10,7 +10,8 @@ const Clan= sequelize.define('clans',{
     allowNullable: false,
     allowNull: false,
   },
-  leader_id: {
+  leaderId: {
+    field: 'leaderId',
     type: DataTypes.CHAR(65),
     allowNull: false,
   },
@@ -18,10 +19,10 @@ const Clan= sequelize.define('clans',{
     type: DataTypes.CHAR(45),
     allowNull: false,
   },
-  created_at: {
+  createdAt: {
     type: DataTypes.DATE,
     allowNull: false,
-    field: 'created_at'
+    field: 'createdAt'
   }
 }, {
   sequelize,

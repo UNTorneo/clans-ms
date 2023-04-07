@@ -3,7 +3,7 @@ const { Clan } = require('./clan_models');
 
 const {sequelize} = require('../controller/db');  
 
-const UsersClan = sequelize.define('users_clan',{
+const UsersClan = sequelize.define('usersClan',{
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -11,15 +11,16 @@ const UsersClan = sequelize.define('users_clan',{
         allowNullable: false,
         allowNull: false,
     },
-    clan_id: {
+    clanId: {
         type: DataTypes.INTEGER,
-        field: 'clan_id',
-        unique: true,
+        field: 'clanId',
+        unique: false,
         allowNullable: false,
         allowNull: false,
     },
-    user_id: {
+    userId: {
         type: DataTypes.INTEGER,
+        field: 'userId',
         allowNullable: false,
         allowNull: false,
     }
@@ -29,12 +30,12 @@ const UsersClan = sequelize.define('users_clan',{
   paranoid: true,
   underscored: true,
   freezeTableName: true,
-  tableName: 'users_clan',
-  modelName: 'users_clan'
+  tableName: 'usersClan',
+  modelName: 'usersClan'
 });
 
 Clan.hasMany(UsersClan, {
-    foreignKey: 'clan_id'
+    foreignKey: 'clanId'
 });
 
 UsersClan.belongsTo(Clan);
