@@ -12,7 +12,7 @@ const getClanById = async (request, response) => {
   );
   if (clans == null) {
     response.json({
-      'msg' : 'Not found'
+      'message' : 'Not found'
     });
   }
   response.json(clans[0]);
@@ -26,7 +26,7 @@ const getClans = async (request, response) => {
     console.log(clans.every(clan => clan instanceof Clan));
   } catch (error) {
     response.json({
-      'msg' : error
+      'error' : error
     });
   }
 }
@@ -39,17 +39,13 @@ const createClan = async (request, response) => {
       'name':name,
       'createdAt':createdAt
     });
+    console.log("Sí está ejecutando");
     response.json({
-      'msg' : `Clan created`,
-      'Clan data' : {
-        'leaderId':leaderId,
-        'name':name,
-        'createdAt':createdAt
-      }
+      'message' : `Clan created`
     });
   } catch (error) {
     response.json({
-      'msg' : error
+      'error' : error
     });
   }
 }
@@ -69,11 +65,11 @@ const updateClan = async (request, response) => {
       }
     });
     response.json({
-      'msg' : `Clan with id ${id} updated.`
+      'message' : `Clan with id ${id} updated.`
     });
     } catch (error) {
       response.json({
-        'msg' : error
+        'error' : error
       });
     }
 }
@@ -85,11 +81,11 @@ const deleteClan = async (request, response) => {
       where: {'id' : id}
     });
     response.json({
-      'msg' : `Clan with id ${id} deleted.`
+      'message' : `Clan with id ${id} deleted.`
     });
   } catch (error) {
     response.json({
-      'msg' : error
+      'error' : error
     });
   }
 }
@@ -102,7 +98,7 @@ const getUsersByClanId = async (request, response) => {
     });
     if (users == null) {
       response.json({
-        'msg' : 'Not found'
+        'message' : 'Not found'
       });
     }
     users.forEach((user) => delete user.dataValues.clanId);
@@ -110,7 +106,7 @@ const getUsersByClanId = async (request, response) => {
     console.log(users.every(user => user instanceof UsersClan));
   } catch (error) {
     response.json({
-        'msg' : error
+        'error' : error
       });
   }
 }
@@ -127,11 +123,11 @@ const addUserToClan = async (request, response) => {
         'userId' : userId
       });
       response.json({
-        'msg' : `User with id ${userId} added to clan with id ${clanId}`
+        'message' : `User with id ${userId} added to clan with id ${clanId}`
       });
     } catch (error) {
       response.json({
-        'msg' : error
+        'error' : error
       });
     }
   }
