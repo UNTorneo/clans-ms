@@ -45,15 +45,21 @@ const getClans = async (request, response) => {
 const createClan = async (request, response) => {
   const { leaderId, name, createdAt } = request.body;
   try {
-    await Clan.create({
-      'leaderId':leaderId,
-      'name':name,
-      'createdAt':createdAt
-    });
-    console.log("Sí está ejecutando");
-    response.json({
-      'message' : `Clan created`
-    });
+    getUserById(leaderId)
+      .then(async (res) => {
+        await Clan.create({
+          'leaderId':leaderId,
+          'name':name,
+          'createdAt':createdAt
+        });
+        response.json({
+          'message' : `Clan created`
+        });
+      }) .catch((error) => {
+        response.json({
+          'error':error
+        });
+      })
   } catch (error) {
     response.json({
       'error' : error
@@ -68,21 +74,30 @@ const updateClan = async (request, response) => {
   const values = {};
   if (name) {values['name'] = name};
   if (leaderId) {values['leaderId'] = leaderId};
-  try {
-    await Clan.update(values,
-    {
-      where: {
-        'id' : id
-      }
-    });
-    response.json({
-      'message' : `Clan with id ${id} updated.`
-    });
+  const isClanIdCorrect = Clan.findAll({where: {id : clanId}}) != null;
+  if (isClanIdCorrect) {
+    try {
+      getUserById(leaderId)
+        .then(async (userData) => {
+          await Clan.update(values,
+          {
+            where: {
+              'id' : id
+            }
+          });
+          response.json({
+            'message' : `Clan with id ${id} updated.`
+          });
+        })
+        .catch(error => {
+          console.log(error);
+        })
     } catch (error) {
       response.json({
         'error' : error
       });
     }
+  }
 }
 
 const deleteClan = async (request, response) => {
