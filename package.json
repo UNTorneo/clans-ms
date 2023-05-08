@@ -31,7 +31,8 @@
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.29.0",
     "sequelize-cli": "^6.6.0",
-    "sqlite3": "^5.1.4"
+    "sqlite3": "^5.1.4",
+    "axios": "^1.4.0"
   },
   "optionalDependencies": {
     "fsevents": "^2.3.2"
