@@ -113,12 +113,14 @@ const getUsersByClanId = async (request, response) => {
       });
     }
     const users = res.map((e) => e.dataValues['userId']);
-    const usersFromServer = users.map((userId) => getUserById(userId)
-      .then(userData => {
-        return userData;
-      })
-    );
-    console.log(usersFromServer);
+    var usersFromServer = [];
+    for (let i = 0; i < users.length; i++) {
+      await getUserById(users[i])
+        .then((userData) => {
+          usersFromServer.push(userData);
+        })
+        .catch(error => console.log(error));
+    }
     response.json(usersFromServer);
   } catch (error) {
     console.log(error);
