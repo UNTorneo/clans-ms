@@ -6,7 +6,7 @@ const axios = require('axios');
 
 async function getUserById(userId) {
   try {
-    const response = await axios.get(`http://localhost:8088/users/${userId}`);
+    const response = await axios.get(`https://users-microservice-fastapi-4yiv26znhq-uc.a.run.app/users/${userId}`);
     return response.data;
   } catch (error) {
     console.log(error);
