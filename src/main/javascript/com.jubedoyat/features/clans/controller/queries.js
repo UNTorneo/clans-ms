@@ -10,12 +10,15 @@ async function getUserById(userId) {
     return response.data;
   } catch (error) {
     console.log(error);
-    return error;
+    response.json({
+      'error':error
+    });
   }
 }
 
 const getClanById = async (request, response) => {
   const id = parseInt(request.params.id);
+  try {
   const clans = await Clan.findAll(
     {where: {
       id: id
@@ -23,11 +26,14 @@ const getClanById = async (request, response) => {
   );
   if (clans == null) {
     response.json({
-      'message' : 'Not found'
+      'error' : 'Not found'
     });
   }
-  response.json(clans[0]);
-  console.log(clans);
+  } catch (error) {
+    response.json({
+      'error':error
+    });
+  }
 }
 
 const getClans = async (request, response) => {
@@ -74,11 +80,12 @@ const updateClan = async (request, response) => {
   const values = {};
   if (name) {values['name'] = name};
   if (leaderId) {values['leaderId'] = leaderId};
-  const isClanIdCorrect = Clan.findAll({where: {id : clanId}}) != null;
+  const isClanIdCorrect = Clan.findAll({where: {id : id}}) != null;
   if (isClanIdCorrect) {
     try {
       getUserById(leaderId)
         .then(async (userData) => {
+          console.log(userData);
           await Clan.update(values,
           {
             where: {
@@ -90,7 +97,9 @@ const updateClan = async (request, response) => {
           });
         })
         .catch(error => {
-          console.log(error);
+          response.json({
+            'error':error
+          });
         })
     } catch (error) {
       response.json({
@@ -162,7 +171,9 @@ const addUserToClan = async (request, response) => {
           });
         } catch (error) {
           console.log(error);
-          response.json(error);
+          response.json({
+            'error':error
+          });
         }
       }
     })
