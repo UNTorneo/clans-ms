@@ -10,9 +10,7 @@ async function getUserById(userId) {
     return response.data;
   } catch (error) {
     console.log(error);
-    response.json({
-      'error':error
-    });
+    return error;
   }
 }
 
@@ -29,6 +27,7 @@ const getClanById = async (request, response) => {
       'error' : 'Not found'
     });
   }
+  response.json(clans);
   } catch (error) {
     response.json({
       'error':error
@@ -139,11 +138,14 @@ const getUsersByClanId = async (request, response) => {
     const users = res.map((e) => e.dataValues['userId']);
     var usersFromServer = [];
     for (let i = 0; i < users.length; i++) {
-      await getUserById(users[i])
-        .then((userData) => {
-          usersFromServer.push(userData);
-        })
-        .catch(error => console.log(error));
+      if (users[i]<10) {
+        await getUserById(users[i])
+          .then((userData) => {
+            console.log(userData);
+            usersFromServer.push(userData);
+          })
+          .catch(error => console.log(error));
+      }
     }
     response.json(usersFromServer);
   } catch (error) {
