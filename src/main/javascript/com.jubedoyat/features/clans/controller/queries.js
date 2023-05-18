@@ -22,6 +22,7 @@ const getClanById = async (request, response) => {
       id: id
     },}
   );
+  console.log(clans);
   if (clans == null) {
     response.json({
       'error' : 'Not found'
