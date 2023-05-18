@@ -17,18 +17,14 @@ async function getUserById(userId) {
 const getClanById = async (request, response) => {
   const id = parseInt(request.params.id);
   try {
-  const clans = await Clan.findAll(
-    {where: {
-      id: id
-    },}
-  );
-  console.log(clans);
-  if (clans == null) {
+  const clan = await Clan.findByPk(id);
+  console.log(clan);
+  if (clan == null) {
     response.json({
       'error' : 'Not found'
     });
   }
-  response.json(clans);
+  response.json(clan);
   } catch (error) {
     response.json({
       'error':error
