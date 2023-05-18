@@ -24,7 +24,7 @@ const getClanById = async (request, response) => {
       'error' : 'Not found'
     });
   }
-  response.json(clan);
+  response.json(clan[0]);
   } catch (error) {
     response.json({
       'error':error
